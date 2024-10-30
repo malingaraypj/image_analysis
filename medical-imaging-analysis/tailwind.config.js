@@ -6,6 +6,10 @@ module.exports = {
       textUnderlineOffset: {
         3: "3px",
       },
+      fontFamily: {
+        sans: ["Roboto", "sans-serif"],
+        serif: ["Roboto Serif", "serif"],
+      },
     },
   },
   plugins: [],

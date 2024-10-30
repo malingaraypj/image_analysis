@@ -4,7 +4,7 @@ import navLogo from "./../assets/nav_logo.png";
 export default function Nav() {
   let navLinkClasses = "text-blue-200 underline decoration-2";
   return (
-    <nav className="flex items-center justify-between bg-blue-500 w-full h-16 px-6 sm:px-12 text-white font-sans">
+    <nav className="flex items-center justify-between bg-blue-500 w-full h-16 px-6 sm:px-12 text-white font-sans fixed top-0">
       {/* Logo and Navigation Links */}
       <div className="flex items-center space-x-8">
         <img src={navLogo} alt="navigation logo" className="h-10" />
