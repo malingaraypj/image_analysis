@@ -1,10 +1,10 @@
 import Button from "../../UI/Button";
-import dummyImg from "./../../assets/dummy.png";
 
-export default function InfoCard({ title, content }) {
+export default function InfoCard({ title, content, image }) {
+  console.log(image);
   return (
     <div className="bg-gradient-to-r from-lime-500 to-lime-400 max-w-60 max-h-80 flex flex-col justify-between m-5">
-      <img src={dummyImg} alt="dummy_image" />
+      <img src={image} alt="dummy_image" />
       <h1 className="text-center text-xl font-bold">{title}</h1>
       <p className="text-wrap break-words overflow-hidden">{content}</p>
       <div className="flex justify-center align-bottom m-2">

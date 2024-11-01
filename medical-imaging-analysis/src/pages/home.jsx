@@ -1,49 +1,9 @@
+import { useLoaderData } from "react-router-dom";
 import InfoCard from "../components/home/info_cards";
 import bgImage from "./../assets/bg-image.png";
 
 export default function Home() {
-  const ReadMore = [
-    {
-      title: "2133",
-      img: "dummy",
-      content: `Our annual report reveals the burden of Alzheimer’s and dementia on individuals, caregivers, government, and the nation’s health care system.`,
-    },
-    {
-      title: "2133",
-      img: "dummy",
-      content: `Our annual report reveals the burden of Alzheimer’s and dementia on individuals, caregivers, government, and the nation’s health care system.`,
-    },
-    {
-      title: "2133",
-      img: "dummy",
-      content: `Our annual report reveals the burden of Alzheimer’s and dementia on individuals, caregivers, government, and the nation’s health care system.`,
-    },
-    {
-      title: "2133",
-      img: "dummy",
-      content: `Our annual report reveals the burden of Alzheimer’s and dementia on individuals, caregivers, government, and the nation’s health care system.`,
-    },
-    {
-      title: "2133",
-      img: "dummy",
-      content: `Our annual report reveals the burden of Alzheimer’s and dementia on individuals, caregivers, government, and the nation’s health care system.`,
-    },
-    {
-      title: "2133",
-      img: "dummy",
-      content: `Our annual report reveals the burden of Alzheimer’s and dementia on individuals, caregivers, government, and the nation’s health care system.`,
-    },
-    {
-      title: "2133",
-      img: "dummy",
-      content: `Our annual report reveals the burden of Alzheimer’s and dementia on individuals, caregivers, government, and the nation’s health care system.`,
-    },
-    {
-      title: "2133",
-      img: "dummy",
-      content: `Our annual report reveals the burden of Alzheimer’s and dementia on individuals, caregivers, government, and the nation’s health care system.`,
-    },
-  ];
+  const ReadMore = useLoaderData().data;
 
   return (
     <>
@@ -67,11 +27,32 @@ export default function Home() {
       </div>
       <div className="relative bg-purple-700 flex justify-end">
         <div className="bg-green-600 flex flex-wrap justify-center mb-8 p-4 mr-4 w-2/3">
-          {ReadMore.map((card, index) => (
-            <InfoCard key={index} title={card.title} content={card.content} />
+          {ReadMore?.map((card, index) => (
+            <InfoCard
+              key={index}
+              title={card.title}
+              content={card.content}
+              image={card.img}
+            />
           ))}
         </div>
       </div>
     </>
   );
 }
+
+// Define fetchData as a named export
+export const fetchData = async () => {
+  try {
+    const response = await fetch(
+      "http://localhost:4000/medical_analysis/infoCards"
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.statusText}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Fetch error:", error);
+    throw new Response("Failed to load data", { status: 500 });
+  }
+};
