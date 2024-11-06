@@ -5,4 +5,6 @@ const Router = express.Router();
 
 Router.route("/").get(infoCardsController.getInfoCards);
 
+Router.route("/:id").get(infoCardsController.getInfoCard);
+
 module.exports = Router;
