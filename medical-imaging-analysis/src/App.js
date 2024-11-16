@@ -8,23 +8,33 @@ import Features from "./pages/features.jsx";
 import Signup from "./pages/signup.jsx";
 import Home from "./pages/home.jsx";
 import { fetchData } from "./pages/home.jsx";
+import ErrorPage from "./UI/errorPage.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Navigation />,
+
     children: [
       { index: true, element: <Home />, loader: fetchData },
       { path: "about", element: <About /> },
       { path: "services", element: <Services /> },
       { path: "features", element: <Features /> },
-      { path: "signup", element: <Signup /> },
+      {
+        path: "/signup",
+        element: <Signup />,
+        errorElement: <ErrorPage />,
+      },
     ],
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+    </>
+  );
 }
 
 export default App;
