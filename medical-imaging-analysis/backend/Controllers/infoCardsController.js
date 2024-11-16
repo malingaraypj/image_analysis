@@ -1,17 +1,17 @@
 const AppError = require('../utils/AppError');
+const catchAsync = require('../utils/catchAsync');
 const infoCardsData = require('./../data/infoCardsdata');
 
-exports.getInfoCards = (req, res, next) => {
+exports.getInfoCards = catchAsync((req, res, next) => {
   res.json({
     status: 'success',
     data: infoCardsData,
   });
-};
+});
 
-exports.getInfoCard = (req, res, next) => {
+exports.getInfoCard = catchAsync((req, res, next) => {
   const id = req.params.id * 1;
   const data = infoCardsData.find((item) => item.id === id);
-
 
   if (!data) {
     return next(
@@ -25,4 +25,4 @@ exports.getInfoCard = (req, res, next) => {
     status: 'success',
     data,
   });
-};
+});
