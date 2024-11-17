@@ -8,102 +8,47 @@ import Button from "../UI/Button";
 export default function Signup() {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
-  const [passError, setPassError] = useState({
-    lengthError: null,
-    upperCaseError: null,
-    lowerCaseError: null,
-    specialCharError: null,
-    matchError: null,
-  });
-  const [emailError, setEmailError] = useState(null);
-  const [nameError, setNameError] = useState(null);
-
   const passwordRef = useRef();
   const emailRef = useRef();
   const nameRef = useRef();
   const passwordConfirmRef = useRef();
 
   function validateForm(data) {
-    const errors = {};
+    const validationErrors = {};
 
+    // Name Validation
     if (!validator.isLength(data.name, { min: 1 })) {
-      errors.name = "Name is required";
+      validationErrors.name = "Name is required";
     }
 
+    // Email Validation
     if (!validator.isEmail(data.email)) {
-      errors.email = "Invalid email address";
+      validationErrors.email = "Invalid email address";
     }
 
+    // Password Validation
     if (!validator.isLength(data.password, { min: 8 })) {
-      errors.password = "Password must be at least 8 characters long";
+      validationErrors.password = "Password must be at least 8 characters long";
     }
-
-    if (data.password !== data.passwordConfirm) {
-      errors.passwordConfirm = "Passwords do not match";
-    }
-
-    return errors;
-  }
-
-  function handlePassword() {
-    const password = passwordRef.current.value;
-    const passwordConfirm = passwordConfirmRef.current.value;
-
-    let passErrors = {
-      lengthError: null,
-      upperCaseError: null,
-      lowerCaseError: null,
-      specialCharError: null,
-      matchError: null,
-    };
-
-    // Password length validation
-    if (password.length < 8) {
-      passErrors.lengthError = "Password must be at least 8 characters long";
-    }
-
-    // Uppercase letter validation
-    if (!/[A-Z]/.test(password)) {
-      passErrors.upperCaseError =
+    if (!/[A-Z]/.test(data.password)) {
+      validationErrors.password =
         "Password must contain at least one uppercase letter";
     }
-
-    // Lowercase letter validation
-    if (!/[a-z]/.test(password)) {
-      passErrors.lowerCaseError =
+    if (!/[a-z]/.test(data.password)) {
+      validationErrors.password =
         "Password must contain at least one lowercase letter";
     }
-
-    // Special character validation
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      passErrors.specialCharError =
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(data.password)) {
+      validationErrors.password =
         "Password must contain at least one special character";
     }
 
-    // Password confirmation validation
-    if (password !== passwordConfirm) {
-      passErrors.matchError = "Passwords do not match";
+    // Password Confirm Validation
+    if (data.password !== data.passwordConfirm) {
+      validationErrors.passwordConfirm = "Passwords do not match";
     }
 
-    setPassError(passErrors);
-  }
-
-  function handleEmail() {
-    const email = emailRef.current.value;
-    if (!validator.isEmail(email)) {
-      setEmailError("Invalid email address");
-    } else {
-      setEmailError(null);
-    }
-  }
-
-  function handleName() {
-    const name = nameRef.current.value;
-    if (name.trim() === "") {
-      setNameError("Name is required");
-    } else {
-      setNameError(null);
-    }
+    return validationErrors;
   }
 
   async function handleSubmit(event) {
@@ -111,12 +56,14 @@ export default function Signup() {
     const fd = new FormData(event.target);
     const data = Object.fromEntries(fd.entries());
 
+    // Form Validation
     const validationErrors = validateForm(data);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-    } else {
-      console.log(data);
+      return;
+    }
 
+    try {
       const response = await fetch(
         "http://localhost:4000/medical_analysis/user/signup",
         {
@@ -127,20 +74,29 @@ export default function Signup() {
           body: JSON.stringify(data),
         }
       );
-      if (!response.ok) {
 
-        throw new Error("Error while submitting data");
+      if (!response.ok) {
+        const errorData = await response.json();
+
+        navigate("/error", {
+          state: {
+            message: errorData.message || "Error while submitting data",
+          },
+        });
+        throw new Error(errorData.message || "Error while submitting data");
       }
 
       const result = await response.json();
       console.log(result);
 
       navigate(-1);
+    } catch (error) {
+      navigate("/error", { state: { message: error.message } });
     }
   }
 
   function handleModalClose() {
-    navigate(-1); // Go back
+    navigate(-1);
   }
 
   return (
@@ -153,61 +109,38 @@ export default function Signup() {
             id="name"
             label="Enter your name"
             type="text"
-            onChange={handleName}
+            error={errors.name}
           />
-          {nameError && <p className="text-red-500">{nameError}</p>}
+          {errors.name && <p className="text-red-500">{errors.name}</p>}
 
           <Input
             ref={emailRef}
             id="email"
             label="Enter your email"
             type="email"
-            onChange={handleEmail}
+            error={errors.email}
           />
-          {emailError && <p className="text-red-500">{emailError}</p>}
+          {errors.email && <p className="text-red-500">{errors.email}</p>}
 
-          <div className="flex flex-col gap-3">
-            <div>
-              <Input
-                ref={passwordRef}
-                id="password"
-                label="Enter your password"
-                type="password"
-                onChange={handlePassword}
-              />
-              {passError.lengthError && (
-                <p className="text-red-500">{passError.lengthError}</p>
-              )}
-              {passError.upperCaseError && (
-                <p className="text-red-500">{passError.upperCaseError}</p>
-              )}
-              {passError.lowerCaseError && (
-                <p className="text-red-500">{passError.lowerCaseError}</p>
-              )}
-              {passError.specialCharError && (
-                <p className="text-red-500">{passError.specialCharError}</p>
-              )}
-              {errors.password && (
-                <p className="text-red-500">{errors.password}</p>
-              )}
-            </div>
+          <Input
+            ref={passwordRef}
+            id="password"
+            label="Enter your password"
+            type="password"
+            error={errors.password}
+          />
+          {errors.password && <p className="text-red-500">{errors.password}</p>}
 
-            <div>
-              <Input
-                ref={passwordConfirmRef}
-                id="passwordConfirm"
-                label="Confirm your password"
-                type="password"
-                onChange={handlePassword}
-              />
-              {passError.matchError && (
-                <p className="text-red-500">{passError.matchError}</p>
-              )}
-              {errors.passwordConfirm && (
-                <p className="text-red-500">{errors.passwordConfirm}</p>
-              )}
-            </div>
-          </div>
+          <Input
+            ref={passwordConfirmRef}
+            id="passwordConfirm"
+            label="Confirm your password"
+            type="password"
+            error={errors.passwordConfirm}
+          />
+          {errors.passwordConfirm && (
+            <p className="text-red-500">{errors.passwordConfirm}</p>
+          )}
 
           <div className="flex justify-between mt-4">
             <Button

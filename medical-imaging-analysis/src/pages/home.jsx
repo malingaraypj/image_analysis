@@ -1,6 +1,7 @@
 import { useLoaderData } from "react-router-dom";
 import InfoCard from "../components/home/info_cards";
 import bgImage from "./../assets/bg-image.png";
+import News from "../components/home/news";
 
 export default function Home() {
   const ReadMore = useLoaderData().data;
@@ -25,17 +26,25 @@ export default function Home() {
           overall term that describes a group of symptoms.
         </p>
       </div>
-      <div className="relative bg-purple-700 flex justify-end">
-        <div className="bg-green-600 flex flex-wrap justify-center mb-8 p-4 mr-4 w-2/3">
-          {ReadMore?.map((card, index) => (
-            <InfoCard
-              key={index}
-              title={card.title}
-              content={card.content}
-              image={card.img}
-            />
-          ))}
-        </div>
+
+      <div className=" flex flex-wrap gap-5 justify-center ">
+        {ReadMore?.map((card, index) => (
+          <InfoCard
+            key={index}
+            title={card.title}
+            content={card.content}
+            image={card.img}
+          />
+        ))}
+      </div>
+      <div className="m-auto max-w-fit backdrop-blur-xl bg-slate-300 z-0">
+        <h1 className="font-sans text-5xl m-5 pt-5 font-semibold text-blue-900">
+          News and Events
+        </h1>
+        <News></News>
+        <News></News>
+        <News></News>
+        <News></News>
       </div>
     </>
   );
