@@ -5,21 +5,14 @@ import Modal from "../UI/Modal";
 import Button from "../UI/Button";
 import ModalContext from "../UI/modalContext";
 
-export default function Signup() {
+export default function Login() {
   const [errors, setErrors] = useState({});
-  const passwordRef = useRef();
   const emailRef = useRef();
-  const nameRef = useRef();
-  const passwordConfirmRef = useRef();
+  const passwordRef = useRef();
 
   // Validate form data
   function validateForm(data) {
     const validationErrors = {};
-
-    // Name Validation
-    if (!validator.isLength(data.name, { min: 1 })) {
-      validationErrors.name = "Name is required";
-    }
 
     // Email Validation
     if (!validator.isEmail(data.email)) {
@@ -29,23 +22,6 @@ export default function Signup() {
     // Password Validation
     if (!validator.isLength(data.password, { min: 8 })) {
       validationErrors.password = "Password must be at least 8 characters long";
-    }
-    if (!/[A-Z]/.test(data.password)) {
-      validationErrors.password =
-        "Password must contain at least one uppercase letter";
-    }
-    if (!/[a-z]/.test(data.password)) {
-      validationErrors.password =
-        "Password must contain at least one lowercase letter";
-    }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(data.password)) {
-      validationErrors.password =
-        "Password must contain at least one special character";
-    }
-
-    // Password Confirm Validation
-    if (data.password !== data.passwordConfirm) {
-      validationErrors.passwordConfirm = "Passwords do not match";
     }
 
     return validationErrors;
@@ -66,7 +42,7 @@ export default function Signup() {
 
     try {
       const response = await fetch(
-        "http://localhost:4000/medical_analysis/user/signup",
+        "http://localhost:4000/medical_analysis/user/login",
         {
           method: "POST",
           headers: {
@@ -78,7 +54,7 @@ export default function Signup() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Error while submitting data");
+        throw new Error(errorData.message || "Error while logging in");
       }
 
       const result = await response.json();
@@ -91,34 +67,19 @@ export default function Signup() {
 
   const modalCtx = useContext(ModalContext);
   useEffect(() => {
-    if (modalCtx.isModalOpen && !modalCtx.isSignup) {
+    if (modalCtx.isModalOpen && modalCtx.isLogin) {
       modalCtx.closeModal();
     }
-  }, [modalCtx, modalCtx.isModalOpen, modalCtx.isSignup]);
-
-  console.log(modalCtx);
+  }, [modalCtx, modalCtx.isModalOpen, modalCtx.isLogin]);
 
   return (
     <Modal
-      open={modalCtx.isModalOpen && modalCtx.isSignup}
+      open={modalCtx.isModalOpen && modalCtx.isLogin}
       onClose={modalCtx.closeModal}
     >
-      <h2 className="text-lg font-bold mb-4">Sign Up</h2>
-      <div className="flex w-full gap-4 justify-between">
-        <Button className="w-full bg-blue-500 p-5 mb-5 ml-5">Sign Up</Button>
-        <Button className="w-full bg-blue-500 p-5 mb-5 ml-5">Login</Button>
-      </div>
+      <h2 className="text-lg font-bold mb-4">Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4">
-          <Input
-            ref={nameRef}
-            id="name"
-            label="Enter your name"
-            type="text"
-            error={errors.name}
-          />
-          {errors.name && <p className="text-red-500">{errors.name}</p>}
-
           <Input
             ref={emailRef}
             id="email"
@@ -137,17 +98,6 @@ export default function Signup() {
           />
           {errors.password && <p className="text-red-500">{errors.password}</p>}
 
-          <Input
-            ref={passwordConfirmRef}
-            id="passwordConfirm"
-            label="Confirm your password"
-            type="password"
-            error={errors.passwordConfirm}
-          />
-          {errors.passwordConfirm && (
-            <p className="text-red-500">{errors.passwordConfirm}</p>
-          )}
-
           <div className="flex justify-between mt-4">
             <Button
               className="bg-blue-500 px-5 py-2 hover:bg-blue-400 text-white rounded-xl"
@@ -160,7 +110,7 @@ export default function Signup() {
               className="bg-blue-500 px-5 py-2 hover:bg-blue-400 text-white rounded-xl"
               type="submit"
             >
-              Submit
+              Login
             </Button>
           </div>
         </div>

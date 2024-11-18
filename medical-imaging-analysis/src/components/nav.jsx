@@ -1,8 +1,16 @@
 import { NavLink } from "react-router-dom";
 import navLogo from "./../assets/nav_logo.png";
+import Button from "../UI/Button";
+import { useContext } from "react";
+import ModalContext from "../UI/modalContext";
 
 export default function Nav() {
   let navLinkClasses = "text-blue-200 underline decoration-2";
+  const modalCtx = useContext(ModalContext);
+  function handleClick() {
+    console.log("i am clicked");
+    modalCtx.openModal()
+  }
   return (
     <nav className="flex items-center justify-between bg-blue-500 w-full h-16 px-6 sm:px-12 text-white font-sans fixed top-0 z-50">
       {/* Logo and Navigation Links */}
@@ -54,12 +62,7 @@ export default function Nav() {
 
       {/* Login/Signup */}
       <div>
-        <NavLink
-          to="/signup"
-          className={({ isActive }) => (isActive ? navLinkClasses : undefined)}
-        >
-          Login/Signup
-        </NavLink>
+        <Button onClick={handleClick}>login/signup</Button>
       </div>
     </nav>
   );

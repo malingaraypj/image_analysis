@@ -5,11 +5,10 @@ import Navigation from "./components/nav_enclose";
 import About from "./pages/about.jsx";
 import Services from "./pages/services.jsx";
 import Features from "./pages/features.jsx";
-import Signup from "./pages/signup.jsx";
-import Home from "./pages/home.jsx";
-import { fetchData } from "./pages/home.jsx";
+import Home, { fetchData } from "./pages/home.jsx";
 import ErrorPage from "./UI/errorPage.jsx";
-import ImageDetailsModal from "./components/services/report.jsx";
+import { ModalProvider } from "./UI/modalContext.jsx";
+import Signup from "./pages/signup.jsx";
 
 const router = createBrowserRouter([
   {
@@ -22,19 +21,8 @@ const router = createBrowserRouter([
       {
         path: "/services",
         element: <Services />,
-        children: [
-          {
-            path: "report",
-            element: <ImageDetailsModal />,
-          },
-        ],
       },
       { path: "/features", element: <Features /> },
-      {
-        path: "/signup",
-        element: <Signup />,
-        // Route-specific error handler (optional)
-      },
       {
         path: "/error",
         element: <ErrorPage />,
@@ -44,7 +32,12 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ModalProvider>
+      <RouterProvider router={router} />
+      <Signup />
+    </ModalProvider>
+  );
 }
 
 export default App;
