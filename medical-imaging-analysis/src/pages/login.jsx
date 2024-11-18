@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import validator from "validator";
 import Input from "../UI/Input";
 import Modal from "../UI/Modal";
@@ -10,18 +10,27 @@ export default function Login() {
   const emailRef = useRef();
   const passwordRef = useRef();
 
+  const modalCtx = useContext(ModalContext);
+
+  useEffect(() => {
+    passwordRef.current.value = "";
+    emailRef.current.value = "";
+
+    setErrors({});
+  }, [modalCtx.modalType]);
+
   // Validate form data
   function validateForm(data) {
     const validationErrors = {};
 
     // Email Validation
     if (!data.email || !validator.isEmail(data.email)) {
-      validationErrors.email = "Invalid email address";
+      validationErrors.error = "Invalid email or password 1";
     }
 
     // Password Validation
-    if (!data.password || !validator.isLength(data.password, { min: 8 })) {
-      validationErrors.password = "Password must be at least 8 characters long";
+    if (!data.password) {
+      validationErrors.error = "Invalid email or password 2";
     }
 
     return validationErrors;
@@ -54,6 +63,7 @@ export default function Login() {
 
       if (!response.ok) {
         const errorData = await response.json();
+
         throw new Error(errorData.message || "Error while logging in");
       }
 
@@ -62,16 +72,9 @@ export default function Login() {
       modalCtx.closeModal();
     } catch (error) {
       console.error("Login error:", error.message); // Improved error logging
-      setErrors({ general: error.message }); // Display error to the user
+      setErrors({ general: error.message }); // Display backend error message
     }
   }
-
-  const modalCtx = useContext(ModalContext);
-  // useEffect(() => {
-  //   if (modalCtx.isModalOpen && modalCtx.modalType!=='login') {
-  //     modalCtx.closeModal();
-  //   }
-  // }, [modalCtx, modalCtx.isModalOpen, modalCtx.isSignup]);
 
   return (
     <Modal
@@ -80,11 +83,7 @@ export default function Login() {
     >
       <h2 className="text-lg font-bold mb-4">Login</h2>
       <div className="flex w-full gap-4"></div>
-      {
-        errors.general && (
-          <p className="text-red-500 mb-4">{errors.general}</p>
-        ) /* Display general errors */
-      }
+      {errors.error && <p className="text-red-500 mb-4">{errors.error}</p>}
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4">
           <Input
@@ -92,18 +91,18 @@ export default function Login() {
             id="login_email"
             label="Enter your email"
             type="email"
+            name="email"
             error={errors.email}
           />
-          {errors.email && <p className="text-red-500">{errors.email}</p>}
 
           <Input
             ref={passwordRef}
             id="login_password"
             label="Enter your password"
             type="password"
+            name="password"
             error={errors.password}
           />
-          {errors.password && <p className="text-red-500">{errors.password}</p>}
 
           <div className="flex justify-between mt-4">
             <Button
@@ -121,7 +120,12 @@ export default function Login() {
                 Login
               </Button>
               <div className="text-blue-600 m-1">
-                <Button onClick={modalCtx.toggleModalType}>
+                <Button
+                  onClick={() => {
+                    modalCtx.toggleModalType();
+                    modalCtx.openModal();
+                  }}
+                >
                   don't have an account
                 </Button>
               </div>
