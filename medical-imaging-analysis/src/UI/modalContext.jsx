@@ -1,10 +1,14 @@
 import { createContext, useState } from "react";
 
-const ModalContext = createContext();
+const ModalContext = createContext({
+  isModalOpen: false,
+  modalType: "signup",
+  toggle: () => {},
+});
 
 export function ModalProvider({ children }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSignup, setIsSignup] = useState(true); // You can toggle between login/signup here
+  const [modalType, setModalType] = useState("signup");
 
   const openModal = () => {
     console.log("opening the modal");
@@ -18,15 +22,26 @@ export function ModalProvider({ children }) {
 
   const toggleModalType = () => {
     console.log("switching modal");
-    setIsSignup((prevState) => !prevState); // Toggle between signup and login
+    setModalType((prevState) => {
+      if (prevState === "signup") {
+        return "login";
+      }
+      return "signup";
+    }); // Toggle between signup and login
   };
 
+  const contextVal = {
+    isModalOpen,
+    modalType,
+    openModal,
+    closeModal,
+    toggleModalType,
+  };
+
+  console.log(contextVal)
+
   return (
-    <ModalContext.Provider
-      value={{ isModalOpen, isSignup, openModal, closeModal, toggleModalType }}
-    >
-      {children}
-    </ModalContext.Provider>
+    <ModalContext.Provider value={contextVal}>{children}</ModalContext.Provider>
   );
 }
 

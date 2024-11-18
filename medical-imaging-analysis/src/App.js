@@ -9,6 +9,7 @@ import Home, { fetchData } from "./pages/home.jsx";
 import ErrorPage from "./UI/errorPage.jsx";
 import { ModalProvider } from "./UI/modalContext.jsx";
 import Signup from "./pages/signup.jsx";
+import Login from "./pages/login.jsx";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,7 @@ function App() {
     <ModalProvider>
       <RouterProvider router={router} />
       <Signup />
+      <Login />
     </ModalProvider>
   );
 }

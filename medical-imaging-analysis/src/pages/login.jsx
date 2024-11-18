@@ -1,4 +1,4 @@
-import { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef, useContext } from "react";
 import validator from "validator";
 import Input from "../UI/Input";
 import Modal from "../UI/Modal";
@@ -15,12 +15,12 @@ export default function Login() {
     const validationErrors = {};
 
     // Email Validation
-    if (!validator.isEmail(data.email)) {
+    if (!data.email || !validator.isEmail(data.email)) {
       validationErrors.email = "Invalid email address";
     }
 
     // Password Validation
-    if (!validator.isLength(data.password, { min: 8 })) {
+    if (!data.password || !validator.isLength(data.password, { min: 8 })) {
       validationErrors.password = "Password must be at least 8 characters long";
     }
 
@@ -61,28 +61,35 @@ export default function Login() {
       console.log(result);
       modalCtx.closeModal();
     } catch (error) {
-      console.log(error);
+      console.error("Login error:", error.message); // Improved error logging
+      setErrors({ general: error.message }); // Display error to the user
     }
   }
 
   const modalCtx = useContext(ModalContext);
-  useEffect(() => {
-    if (modalCtx.isModalOpen && modalCtx.isLogin) {
-      modalCtx.closeModal();
-    }
-  }, [modalCtx, modalCtx.isModalOpen, modalCtx.isLogin]);
+  // useEffect(() => {
+  //   if (modalCtx.isModalOpen && modalCtx.modalType!=='login') {
+  //     modalCtx.closeModal();
+  //   }
+  // }, [modalCtx, modalCtx.isModalOpen, modalCtx.isSignup]);
 
   return (
     <Modal
-      open={modalCtx.isModalOpen && modalCtx.isLogin}
+      open={modalCtx.isModalOpen && modalCtx.modalType === "login"}
       onClose={modalCtx.closeModal}
     >
       <h2 className="text-lg font-bold mb-4">Login</h2>
+      <div className="flex w-full gap-4"></div>
+      {
+        errors.general && (
+          <p className="text-red-500 mb-4">{errors.general}</p>
+        ) /* Display general errors */
+      }
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4">
           <Input
             ref={emailRef}
-            id="email"
+            id="login_email"
             label="Enter your email"
             type="email"
             error={errors.email}
@@ -91,7 +98,7 @@ export default function Login() {
 
           <Input
             ref={passwordRef}
-            id="password"
+            id="login_password"
             label="Enter your password"
             type="password"
             error={errors.password}
@@ -106,12 +113,19 @@ export default function Login() {
             >
               Close
             </Button>
-            <Button
-              className="bg-blue-500 px-5 py-2 hover:bg-blue-400 text-white rounded-xl"
-              type="submit"
-            >
-              Login
-            </Button>
+            <div>
+              <Button
+                className="bg-blue-500 px-5 py-2 hover:bg-blue-400 text-white rounded-xl"
+                type="submit"
+              >
+                Login
+              </Button>
+              <div className="text-blue-600 m-1">
+                <Button onClick={modalCtx.toggleModalType}>
+                  don't have an account
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </form>

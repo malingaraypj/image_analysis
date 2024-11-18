@@ -1,4 +1,4 @@
-import { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef, useContext } from "react";
 import validator from "validator";
 import Input from "../UI/Input";
 import Modal from "../UI/Modal";
@@ -28,19 +28,18 @@ export default function Signup() {
 
     // Password Validation
     if (!validator.isLength(data.password, { min: 8 })) {
-      validationErrors.password = "Password must be at least 8 characters long";
-    }
-    if (!/[A-Z]/.test(data.password)) {
       validationErrors.password =
-        "Password must contain at least one uppercase letter";
-    }
-    if (!/[a-z]/.test(data.password)) {
-      validationErrors.password =
-        "Password must contain at least one lowercase letter";
-    }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(data.password)) {
-      validationErrors.password =
-        "Password must contain at least one special character";
+        "Password must be at least 8 characters long and contain:";
+
+      if (!/[A-Z]/.test(data.password)) {
+        validationErrors.password += " one uppercase letter,";
+      }
+      if (!/[a-z]/.test(data.password)) {
+        validationErrors.password += " one lowercase letter,";
+      }
+      if (!/[!@#$%^&*(),.?":{}|<>]/.test(data.password)) {
+        validationErrors.password += " one special character.";
+      }
     }
 
     // Password Confirm Validation
@@ -54,8 +53,13 @@ export default function Signup() {
   // Handle form submission
   async function handleSubmit(event) {
     event.preventDefault();
-    const fd = new FormData(event.target);
-    const data = Object.fromEntries(fd.entries());
+
+    const data = {
+      name: nameRef.current.value,
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+      passwordConfirm: passwordConfirmRef.current.value,
+    };
 
     // Form Validation
     const validationErrors = validateForm(data);
@@ -82,37 +86,26 @@ export default function Signup() {
       }
 
       const result = await response.json();
-      console.log(result);
+      console.log("Signup successful:", result);
       modalCtx.closeModal();
     } catch (error) {
-      console.log(error);
+      console.error("Signup error:", error);
     }
   }
 
   const modalCtx = useContext(ModalContext);
-  useEffect(() => {
-    if (modalCtx.isModalOpen && !modalCtx.isSignup) {
-      modalCtx.closeModal();
-    }
-  }, [modalCtx, modalCtx.isModalOpen, modalCtx.isSignup]);
-
-  console.log(modalCtx);
 
   return (
     <Modal
-      open={modalCtx.isModalOpen && modalCtx.isSignup}
+      open={modalCtx.isModalOpen && modalCtx.modalType === "signup"}
       onClose={modalCtx.closeModal}
     >
       <h2 className="text-lg font-bold mb-4">Sign Up</h2>
-      <div className="flex w-full gap-4 justify-between">
-        <Button className="w-full bg-blue-500 p-5 mb-5 ml-5">Sign Up</Button>
-        <Button className="w-full bg-blue-500 p-5 mb-5 ml-5">Login</Button>
-      </div>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4">
           <Input
             ref={nameRef}
-            id="name"
+            id="signup-name"
             label="Enter your name"
             type="text"
             error={errors.name}
@@ -121,7 +114,7 @@ export default function Signup() {
 
           <Input
             ref={emailRef}
-            id="email"
+            id="signup-email"
             label="Enter your email"
             type="email"
             error={errors.email}
@@ -130,7 +123,7 @@ export default function Signup() {
 
           <Input
             ref={passwordRef}
-            id="password"
+            id="signup-password"
             label="Enter your password"
             type="password"
             error={errors.password}
@@ -139,7 +132,7 @@ export default function Signup() {
 
           <Input
             ref={passwordConfirmRef}
-            id="passwordConfirm"
+            id="signup-passwordConfirm"
             label="Confirm your password"
             type="password"
             error={errors.passwordConfirm}
@@ -156,12 +149,19 @@ export default function Signup() {
             >
               Close
             </Button>
-            <Button
-              className="bg-blue-500 px-5 py-2 hover:bg-blue-400 text-white rounded-xl"
-              type="submit"
-            >
-              Submit
-            </Button>
+            <div>
+              <Button
+                className="bg-blue-500 px-5 py-2 hover:bg-blue-400 text-white rounded-xl"
+                type="submit"
+              >
+                Submit
+              </Button>
+              <div className="text-blue-600 m-1">
+                <Button onClick={modalCtx.toggleModalType}>
+                  already a user?.. Login
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </form>
