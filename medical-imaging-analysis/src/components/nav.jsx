@@ -29,7 +29,7 @@ export default function Nav() {
           </li>
           <li>
             <NavLink
-              to="/about"
+              to="about"
               className={({ isActive }) =>
                 isActive ? navLinkClasses : undefined
               }
@@ -39,7 +39,7 @@ export default function Nav() {
           </li>
           <li>
             <NavLink
-              to="/services"
+              to="services"
               className={({ isActive }) =>
                 isActive ? navLinkClasses : undefined
               }
@@ -49,7 +49,7 @@ export default function Nav() {
           </li>
           <li>
             <NavLink
-              to="/features"
+              to="features"
               className={({ isActive }) =>
                 isActive ? navLinkClasses : undefined
               }

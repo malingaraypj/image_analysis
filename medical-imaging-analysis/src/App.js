@@ -18,14 +18,14 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />, // Global error handler
     children: [
       { index: true, element: <Home />, loader: fetchData },
-      { path: "/about", element: <About /> },
+      { path: "about", element: <About /> },
       {
-        path: "/services",
+        path: "services",
         element: <Services />,
       },
-      { path: "/features", element: <Features /> },
+      { path: "features", element: <Features /> },
       {
-        path: "/error",
+        path: "error",
         element: <ErrorPage />,
       },
     ],
