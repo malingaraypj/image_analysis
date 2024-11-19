@@ -1,21 +1,19 @@
 import { useState } from "react";
 import Upload from "../assets/icons/upload";
-import Uploading from "../components/home/services/uploading";
+import Uploading from "../components/services/uploading";
 import Button from "./../UI/Button";
 import Input from "./../UI/Input";
-
-
 
 export default function Services() {
   const [loading, setLoading] = useState(false);
 
   const handleFileUpload = () => {
-    setLoading(true); 
+    setLoading(true);
     // Simulate file upload delay
     setTimeout(() => {
       setLoading(false); // Hide loader after a delay
       // logic of the file uploading
-    }, 5000); 
+    }, 5000);
   };
 
   return (

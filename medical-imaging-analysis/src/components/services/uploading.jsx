@@ -1,5 +1,5 @@
-import Check from "../../../assets/icons/check";
-import Wrong from "../../../assets/icons/wrong";
+import Check from "../../assets/icons/check";
+import Wrong from "../../assets/icons/wrong";
 
 export default function Uploading({ status, loading }) {
   // Base class for styling
