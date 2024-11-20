@@ -29,6 +29,11 @@ Router.route('/updateMe').patch(
   userController.uploadUserPhoto,
   userController.updateMe
 );
+Router.route('/uploadScanImage').patch(
+  authController.protect,
+  userController.uploadUserPhoto,
+  userController.uploadScanImage
+);
 Router.route('/deleteMe').delete(
   authController.protect,
   userController.deleteMe
