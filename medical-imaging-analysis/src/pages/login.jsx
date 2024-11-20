@@ -63,12 +63,12 @@ export default function Login() {
 
       if (!response.ok) {
         const errorData = await response.json();
-
+        console.log(errorData);
         throw new Error(errorData.message || "Error while logging in");
       }
 
       const result = await response.json();
-      console.log(result);
+      sessionStorage.setItem("jwtToken",result["token"]);
       modalCtx.closeModal();
     } catch (error) {
       console.error("Login error:", error.message); // Improved error logging

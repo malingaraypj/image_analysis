@@ -1,12 +1,12 @@
 import { forwardRef } from "react";
 const Input = forwardRef(function Input(
-  { id, label, name, noBorder, ...props },
+  { id, label, name, imageUpload, ...props },
   ref
 ) {
   let baseClass =
     "w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500";
-  if (noBorder) {
-    baseClass += "border-none";
+  if (imageUpload) {
+    baseClass += " hidden";
   }
   return (
     <div className="flex flex-col gap-2 w-full max-w-sm">
