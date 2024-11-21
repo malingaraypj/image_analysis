@@ -2,6 +2,7 @@ const express = require('express');
 
 const infoCardsRouter = require('./Routers/infoCardsRouter');
 const userRouter = require('./Routers/userRouter');
+const imageRouter = require('./Routers/imageRouter');
 
 const app = express();
 const cors = require('cors');
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/medical_analysis/infoCards', infoCardsRouter);
 app.use('/medical_analysis/user', userRouter);
+app.use('/medical_analysis/image', imageRouter);
 
 app.use((req, res, next) => {
   const message = req.originalUrl;
