@@ -31,7 +31,7 @@ export default function Services() {
     try {
       setLoading(true);
       const response = await fetch(
-        "http://localhost:4000/medical_analysis/user/uploadScanImage",
+        "http://localhost:4000/medical_analysis/user/upload",
         {
           method: "PATCH",
           body: formData,
