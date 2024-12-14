@@ -30,7 +30,7 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-exports.uploadScannedImage = upload.single('photo');
+exports.scannedImage = upload.single('photo');
 
 exports.uploadScanImage = catchAsync(async (req, res, next) => {
   if (req.file) req.body.image = req.file.filename;
