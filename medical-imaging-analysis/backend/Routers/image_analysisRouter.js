@@ -2,7 +2,9 @@ const multer = require('multer');
 const express = require('express');
 const AppError = require('./../utils/AppError');
 const catchAsync = require('./../utils/catchAsync');
-const authController = require('./../Controllers/authController');
+const axios = require('axios');
+const fs = require('fs');
+const FormData = require('form-data');
 
 const Router = express.Router();
 
@@ -39,29 +41,48 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-//controller function for uploading image
-
+// Controller function for uploading image and predicting class
 const imageUpload = catchAsync(async (req, res, next) => {
   if (!req.file) {
     return next(new AppError('No file uploaded!', 400));
   }
 
-  console.log(req.file);
-  console.log(req.body);
+  // Path to the uploaded image
+  const filePath = req.file.path;
 
-  res.status(200).json({
-    status: 'success',
-    message: 'Image uploaded successfully',
-    file: req.file.filename,
-  });
+  try {
+    // Prepare FormData to send to the Python backend
+    const formData = new FormData();
+    formData.append('image', fs.createReadStream(filePath));
+
+    // Send the image to the Python backend
+    const response = await axios.post(
+      'http://localhost:5000/predict',
+      formData,
+      {
+        headers: formData.getHeaders(),
+      }
+    );
+
+    // Get the predicted class from the Python backend response
+    const { predicted_class, confidence } = response.data;
+
+    // Return the prediction result
+    res.status(200).json({
+      status: 'success',
+      predictedClass: predicted_class,
+      confidence,
+    });
+  } catch (err) {
+    console.error(
+      'Error in predicting image class:',
+      err.response?.data || err.message
+    );
+    return next(new AppError('Error predicting image class', 500));
+  }
 });
 
 // POST route to handle file uploads
-Router.post(
-  '/',
-  authController.protect,
-  upload.single('image'),
-  imageUpload
-);
+Router.post('/', upload.single('image'), imageUpload);
 
 module.exports = Router;
