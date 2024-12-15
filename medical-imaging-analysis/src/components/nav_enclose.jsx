@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Nav from "./nav";
-import Footer from "./footer";
+// import Footer from "./footer";
 
 export default function Navigation() {
   return (
@@ -9,7 +9,7 @@ export default function Navigation() {
       <main className="flex-grow pt-16"> {/* Add padding for navbar height */}
         <Outlet />
       </main>
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   );
 }

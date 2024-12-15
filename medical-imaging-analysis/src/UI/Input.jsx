@@ -8,7 +8,7 @@ const Input = forwardRef(function Input(
   let baseClass =
     "w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500";
   if (imageUpload) {
-    baseClass += " text-white";
+    baseClass += " hidden";
   }
 
   // Base class for the label with optional color

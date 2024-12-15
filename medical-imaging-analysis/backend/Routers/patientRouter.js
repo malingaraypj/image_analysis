@@ -40,4 +40,6 @@ Router.route('/')
   .post(upload.single('image'), patientController.createPatient)
   .get(patientController.getPatients);
 
+Router.route('/:id').get(patientController.getPatient);
+
 module.exports = Router;

@@ -1,6 +1,6 @@
 const catchAsync = require('./../utils/catchAsync');
 const Patient = require('./../Models/patientModel');
-const handlerFactory = require('./handlerFactory')
+const handlerFactory = require('./handlerFactory');
 
 const { body, validationResult } = require('express-validator');
 const AppError = require('../utils/AppError');
@@ -55,3 +55,4 @@ exports.validatePatientData = [
 ];
 
 exports.getPatients = handlerFactory.getAll(Patient);
+exports.getPatient = handlerFactory.getOne(Patient);

@@ -1,27 +1,40 @@
-import { NavLink } from "react-router-dom";
-import navLogo from "./../assets/nav_logo.png";
 import Button from "../UI/Button";
 import { useContext } from "react";
 import ModalContext from "../UI/modalContext";
+// import Input from "../UI/Input";
 
 export default function Nav() {
-  let navLinkClasses = "text-blue-200 underline decoration-2";
+  // Accessing modal context
   const modalCtx = useContext(ModalContext);
+
+  // Handle button click
   function handleClick() {
-    console.log("i am clicked");
-    modalCtx.openModal()
+    console.log("Button clicked");
+    modalCtx.openModal();
   }
+
   return (
-    <nav className="flex items-center justify-between bg-blue-500 w-full h-16 px-6 sm:px-12 text-white font-sans fixed top-0 z-50">
-      {/* Logo and Navigation Links */}
+    <nav className="flex items-center justify-between bg-blue-300 w-full h-16 px-6 sm:px-12 text-white font-sans fixed top-0 z-50">
+      <div className="flex justify-center w-full">
+        <input
+          type="text"
+          placeholder="Search patients"
+          className="mr-4 p-2 text-black w-2/5"
+        />
+        <Button className="bg-blue-600 p-3 rounded-lg hover:bg-blue-500 hover:border-white">Search</Button>
+      </div>
+      <Button onClick={handleClick} className="bg-blue-600 p-3 rounded-2xl">Login/Signup</Button>
+
+      {/* Uncomment and update the below code for logo and navigation links if needed */}
+      {/*
       <div className="flex items-center space-x-8">
-        <img src={navLogo} alt="navigation logo" className="h-10" />
+        <img src={navLogo} alt="Navigation Logo" className="h-10" />
         <ul className="flex space-x-6 sm:space-x-8">
           <li>
             <NavLink
               to="/"
               className={({ isActive }) =>
-                isActive ? navLinkClasses : undefined
+                isActive ? "text-blue-200 underline decoration-2" : undefined
               }
             >
               Home
@@ -31,7 +44,7 @@ export default function Nav() {
             <NavLink
               to="about"
               className={({ isActive }) =>
-                isActive ? navLinkClasses : undefined
+                isActive ? "text-blue-200 underline decoration-2" : undefined
               }
             >
               About
@@ -41,7 +54,7 @@ export default function Nav() {
             <NavLink
               to="services"
               className={({ isActive }) =>
-                isActive ? navLinkClasses : undefined
+                isActive ? "text-blue-200 underline decoration-2" : undefined
               }
             >
               Services
@@ -51,7 +64,7 @@ export default function Nav() {
             <NavLink
               to="features"
               className={({ isActive }) =>
-                isActive ? navLinkClasses : undefined
+                isActive ? "text-blue-200 underline decoration-2" : undefined
               }
             >
               Features
@@ -59,11 +72,7 @@ export default function Nav() {
           </li>
         </ul>
       </div>
-
-      {/* Login/Signup */}
-      <div>
-        <Button onClick={handleClick}>login/signup</Button>
-      </div>
+      */}
     </nav>
   );
 }

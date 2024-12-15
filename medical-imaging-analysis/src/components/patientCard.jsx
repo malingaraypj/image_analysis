@@ -1,8 +1,9 @@
 import React from "react";
 import DummyImg from "./../assets/icons/dummy";
+import { Link } from "react-router-dom";
 
 export default function PatientCard({ patient }) {
-  console.log(patient);
+  // console.log(patient);
   return (
     <div className="w-1/3 p-4">
       <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
@@ -35,9 +36,12 @@ export default function PatientCard({ patient }) {
         </p>
         {/* View Details Button */}
         <div className="mt-4 flex justify-center">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors">
+          <Link
+            className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors"
+            to={`/${patient._id}`}
+          >
             View Details
-          </button>
+          </Link>
         </div>
       </div>
     </div>

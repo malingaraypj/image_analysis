@@ -12,6 +12,9 @@ import Signup from "./pages/signup.jsx";
 import Login from "./pages/login.jsx";
 import Landing, { loader as PatientLoader } from "./pages/landing.jsx";
 import AddPatient, { action as PatientAction } from "./pages/addPatient.jsx";
+import PatientReport, {
+  loader as patientReportLoader,
+} from "./pages/patientDetails.jsx";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +39,11 @@ const router = createBrowserRouter([
     path: "/addPatient",
     element: <AddPatient />,
     action: PatientAction,
+  },
+  {
+    path: "/:id",
+    element: <PatientReport />,
+    loader: patientReportLoader,
   },
 ]);
 
