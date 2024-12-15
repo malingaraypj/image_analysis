@@ -4,6 +4,7 @@ const infoCardsRouter = require('./Routers/infoCardsRouter');
 const userRouter = require('./Routers/userRouter');
 const imageRouter = require('./Routers/imageRouter');
 const image_analysisRouter = require('./Routers/image_analysisRouter');
+const patientRouter = require('./Routers/patientRouter');
 
 const app = express();
 const cors = require('cors');
@@ -28,6 +29,7 @@ app.use('/medical_analysis/infoCards', infoCardsRouter);
 app.use('/medical_analysis/user', userRouter);
 app.use('/medical_analysis/image', imageRouter);
 app.use('/medical_analysis/predict', image_analysisRouter);
+app.use('/medical_analysis/patients', patientRouter);
 
 app.use((req, res, next) => {
   const message = req.originalUrl;
