@@ -20,9 +20,14 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Navigation />,
-    errorElement: <ErrorPage />, // Global error handler
+    errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Landing />, loader: PatientLoader },
+      {
+        index: true,
+        element: <Landing />,
+        loader: PatientLoader,
+        errorElement: <ErrorPage />,
+      },
       { path: "about", element: <About /> },
       {
         path: "services/:id",

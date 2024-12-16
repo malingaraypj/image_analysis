@@ -68,11 +68,13 @@ export default function Login() {
       }
 
       const result = await response.json();
-      sessionStorage.setItem("jwtToken",result["token"]);
+
+      sessionStorage.setItem("jwtToken", result["token"]);
+      window.location.reload();
       modalCtx.closeModal();
     } catch (error) {
-      console.error("Login error:", error.message); // Improved error logging
-      setErrors({ general: error.message }); // Display backend error message
+      console.error("Login error:", error.message); 
+      setErrors({ general: error.message }); 
     }
   }
 

@@ -6,7 +6,8 @@ import Button from "./../UI/Button";
 
 export default function Landing() {
   const data = useLoaderData();
-  const patients = data?.data || [];
+  console.log(data.data.data);
+  const patients = data.data.data || [];
 
   return (
     <>
@@ -25,13 +26,8 @@ export default function Landing() {
 
           {/* Sidebar Navigation Links */}
           <ul className="mt-6 w-full text-center">
-            <li className="py-1 hover:bg-blue-500 cursor-pointer">
-              sort options
-            </li>
-            <li className="py-1 hover:bg-blue-500 cursor-pointer">filters</li>
-            <li className="py-1 hover:bg-blue-500 cursor-pointer">
-              patients status
-            </li>
+            <li className="py-1 hover:bg-blue-500 cursor-pointer">Recents</li>
+            <li className="py-1 hover:bg-blue-500 cursor-pointer">Filters</li>
             <li className="py-2 hover:bg-blue-500 cursor-pointer">Logout</li>
           </ul>
         </div>
@@ -45,8 +41,8 @@ export default function Landing() {
 
           {/* Patients List */}
           <div className="flex flex-wrap">
-            {patients.data.length > 0 ? (
-              patients.data.map((patient) => (
+            {patients.length > 0 ? (
+              patients.map((patient) => (
                 <PatientCard key={patient.id} patient={patient} />
               ))
             ) : (
@@ -63,21 +59,45 @@ export default function Landing() {
 
 export async function loader() {
   const apiURL = "http://localhost:4000/medical_analysis/patients";
-  try {
-    const response = await fetch(apiURL);
 
-    // Check for response status
+  const token = sessionStorage.getItem("jwtToken");
+
+  if (!token) {
+    throw json(
+      { message: "You must be logged in to access this resource." },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const response = await fetch(apiURL, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
     if (!response.ok) {
+      const errData = await response.json();
+      console.log(errData);
+      if (response.status === 401) {
+        console.log("unauthorized");
+        throw json(
+          { message: "Please login before using the software." },
+          { status: 401 }
+        );
+      }
+
       throw json(
         { message: "Error while fetching data from backend." },
         { status: response.status }
       );
     }
 
-    const data = await response.json();
-    return { data: data.data };
+    return response;
   } catch (error) {
-    console.error("Error loading patient data:", error);
-    return json({ data: [] });
+    console.error("Error:", error);
+    throw json({ message: "Failed to load data." }, { status: 500 });
   }
 }

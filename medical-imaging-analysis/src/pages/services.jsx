@@ -52,6 +52,8 @@ export default function Services() {
         console.log("File uploaded successfully");
         alert("File uploaded successfully!");
         const data = await response.json();
+
+        window.location.reload();
         console.log(data);
       } else {
         console.error("File upload failed");
