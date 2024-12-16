@@ -4,6 +4,8 @@ const multer = require('multer');
 const AppError = require('./../utils/AppError');
 const Router = express.Router();
 
+const authController = require('./../Controllers/authController');
+
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'public/patientImg');
@@ -38,7 +40,11 @@ const upload = multer({
 
 Router.route('/')
   .post(upload.single('image'), patientController.createPatient)
-  .get(patientController.getPatients);
+  .get(
+    authController.protect,
+    authController.restrictTo('doctor'),
+    patientController.getPatients
+  );
 
 Router.route('/:id').get(patientController.getPatient);
 
