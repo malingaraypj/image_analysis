@@ -6,6 +6,8 @@ const axios = require('axios');
 const fs = require('fs');
 const FormData = require('form-data');
 
+const Image = require('./../Models/ImageModel');
+
 const Router = express.Router();
 
 // Multer configuration for storage
@@ -55,6 +57,9 @@ const imageUpload = catchAsync(async (req, res, next) => {
     const formData = new FormData();
     formData.append('image', fs.createReadStream(filePath));
 
+    // console.log(req.file.filename);
+    // console.log(req.body);
+
     // Send the image to the Python backend
     const response = await axios.post(
       'http://localhost:5000/predict',
@@ -67,11 +72,18 @@ const imageUpload = catchAsync(async (req, res, next) => {
     // Get the predicted class from the Python backend response
     const { predicted_class, confidence } = response.data;
 
+    const newImg = await Image.create({
+      user: req.body.userId,
+      image: req.file.filename,
+      alzheimerClass: predicted_class,
+    });
+
     // Return the prediction result
     res.status(200).json({
       status: 'success',
       predictedClass: predicted_class,
       confidence,
+      message: `image stored as ${newImg}`,
     });
   } catch (err) {
     console.error(

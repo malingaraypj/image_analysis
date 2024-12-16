@@ -3,7 +3,7 @@ import { Link, useLoaderData } from "react-router-dom";
 export default function PatientReport() {
   const data = useLoaderData();
   const patient = data.data.data;
-//   console.log(patient);
+  //   console.log(patient);
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
@@ -55,7 +55,7 @@ export default function PatientReport() {
         </div>
         <Link
           className="bg-green-500 p-3 rounded-2xl text-white mt-10"
-          to={"/services"}
+          to={`/services/${patient._id}`}
         >
           Analyse the results
         </Link>

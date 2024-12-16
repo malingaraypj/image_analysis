@@ -35,10 +35,23 @@ const patientSchema = new mongoose.Schema(
       type: String,
       default: 'dummy',
     },
+    // scannedImg: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: 'Image',
+    // },
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   },
   { timestamps: true }
 );
 
+patientSchema.virtual('scannedImg', {
+  ref: 'Image',
+  localField: '_id',
+  foreignField: 'user',
+});
 
 const Patient = mongoose.model('Patient', patientSchema);
 

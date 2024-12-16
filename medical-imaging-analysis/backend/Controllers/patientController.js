@@ -55,4 +55,20 @@ exports.validatePatientData = [
 ];
 
 exports.getPatients = handlerFactory.getAll(Patient);
-exports.getPatient = handlerFactory.getOne(Patient);
+
+exports.getPatient = catchAsync(async (req, res, next) => {
+  const doc = await Patient.findById(req.params.id).populate(
+    'scannedImg'
+  );
+
+  if (!doc) {
+    return next(new AppError('No patient found with that ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: doc,
+    },
+  });
+});

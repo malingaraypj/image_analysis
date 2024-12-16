@@ -25,8 +25,9 @@ const router = createBrowserRouter([
       { index: true, element: <Landing />, loader: PatientLoader },
       { path: "about", element: <About /> },
       {
-        path: "services",
+        path: "services/:id",
         element: <Services />,
+        loader: patientReportLoader,
       },
       { path: "features", element: <Features /> },
       {

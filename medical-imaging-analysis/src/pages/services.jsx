@@ -3,11 +3,16 @@ import Upload from "../assets/icons/upload";
 import Uploading from "../components/services/uploading";
 import Button from "./../UI/Button";
 import Input from "./../UI/Input";
+import { useLoaderData } from "react-router-dom";
 
 export default function Services() {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const uploadRef = useRef();
+
+  const data = useLoaderData();
+  console.log(data.data.data);
+  const patient = data.data.data;
 
   const handleFileSelection = (event) => {
     const file = event.target.files[0];
@@ -27,13 +32,14 @@ export default function Services() {
 
     const formData = new FormData();
     formData.append("image", image);
+    formData.append("userId", patient._id);
     const token = sessionStorage.getItem("jwtToken");
     try {
       setLoading(true);
       const response = await fetch(
-        "http://localhost:4000/medical_analysis/user/upload",
+        "http://localhost:4000/medical_analysis/predict",
         {
-          method: "PATCH",
+          method: "POST",
           body: formData,
           headers: {
             Authorization: `Bearer ${token}`,
@@ -44,6 +50,8 @@ export default function Services() {
       if (response.ok) {
         console.log("File uploaded successfully");
         alert("File uploaded successfully!");
+        const data = await response.json();
+        console.log(data);
       } else {
         console.error("File upload failed");
         alert("File upload failed!");
