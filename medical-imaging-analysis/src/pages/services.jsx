@@ -4,6 +4,7 @@ import Uploading from "../components/services/uploading";
 import Button from "./../UI/Button";
 import Input from "./../UI/Input";
 import { useLoaderData } from "react-router-dom";
+import Results from "../components/results";
 
 export default function Services() {
   const [loading, setLoading] = useState(false);
@@ -11,7 +12,7 @@ export default function Services() {
   const uploadRef = useRef();
 
   const data = useLoaderData();
-  console.log(data.data.data);
+  // console.log(data.data.data);
   const patient = data.data.data;
 
   const handleFileSelection = (event) => {
@@ -70,7 +71,7 @@ export default function Services() {
   };
 
   return (
-    <div className="m-auto h-screen bg-blue-200 flex items-center justify-center">
+    <div className="m-auto min-h-screen bg-blue-200 flex flex-col items-center justify-center">
       <div className="flex w-2/3 h-2/3 bg-white p-20">
         {/* Left Section */}
         <div className="w-1/2 flex flex-col justify-center items-center p-4 bg-slate-200">
@@ -113,11 +114,13 @@ export default function Services() {
             {loading && (
               <p className="text-center text-blue-500">Uploading...</p>
             )}
-            <Uploading status={true} loading={loading} image={image} />
-            <Uploading status={false} loading={loading} image={image} />
+            {image && (
+              <Uploading status={true} loading={loading} image={image} />
+            )}
           </div>
         </div>
       </div>
+      <Results patient={patient} />
     </div>
   );
 }

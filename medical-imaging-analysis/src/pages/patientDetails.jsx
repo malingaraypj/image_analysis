@@ -53,12 +53,14 @@ export default function PatientReport() {
             {patient.medicalAllergy || "No allergies mentioned"}
           </p>
         </div>
-        <Link
-          className="bg-green-500 p-3 rounded-2xl text-white mt-10"
-          to={`/services/${patient._id}`}
-        >
-          Analyse the results
-        </Link>
+        <div className="mt-10">
+          <Link
+            className="bg-green-500 p-3 rounded-2xl text-white mt-10"
+            to={`/services/${patient._id}`}
+          >
+            Analyse the results
+          </Link>
+        </div>
       </div>
     </div>
   );
