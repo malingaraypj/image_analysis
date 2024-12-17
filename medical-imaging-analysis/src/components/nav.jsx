@@ -1,11 +1,19 @@
 import Button from "../UI/Button";
 import { useContext } from "react";
 import ModalContext from "../UI/modalContext";
+import { SearchContext } from "../UI/searchContext";
 // import Input from "../UI/Input";
 
 export default function Nav() {
   // Accessing modal context
   const modalCtx = useContext(ModalContext);
+  const searchCtx = useContext(SearchContext);
+
+  // console.log(searchCtx);
+  function handleChange(e) {
+    // console.log(e.target.value);
+    searchCtx.updateSearchQuery(e.target.value);
+  }
 
   // Handle button click
   function handleClick() {
@@ -19,11 +27,14 @@ export default function Nav() {
         <input
           type="text"
           placeholder="Search patients"
+          onChange={handleChange}
           className="mr-4 p-2 text-black w-2/5"
         />
-        <Button className="bg-blue-600 p-3 rounded-lg hover:bg-blue-500 hover:border-white">Search</Button>
+        {/* <Button className="bg-blue-600 p-3 rounded-lg hover:bg-blue-500 hover:border-white">Search</Button> */}
       </div>
-      <Button onClick={handleClick} className="bg-blue-600 p-3 rounded-2xl">Login/Signup</Button>
+      <Button onClick={handleClick} className="bg-blue-600 p-3 rounded-2xl">
+        Login/Signup
+      </Button>
 
       {/* Uncomment and update the below code for logo and navigation links if needed */}
       {/*

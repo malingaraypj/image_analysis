@@ -57,9 +57,10 @@ exports.validatePatientData = [
 exports.getPatients = handlerFactory.getAll(Patient);
 
 exports.getPatient = catchAsync(async (req, res, next) => {
-  const doc = await Patient.findById(req.params.id).populate(
-    'scannedImg'
-  );
+  const doc = await Patient.findById(req.params.id).populate({
+    path: 'scannedImg',
+    options: { sort: { createdAt: -1 } },
+  });
 
   if (!doc) {
     return next(new AppError('No patient found with that ID', 404));
@@ -70,5 +71,34 @@ exports.getPatient = catchAsync(async (req, res, next) => {
     data: {
       data: doc,
     },
+  });
+});
+
+exports.searchPatients = catchAsync(async (req, res, next) => {
+  let { query } = req.query;
+
+  if (typeof query !== 'string') {
+    query = '';
+  }
+
+  // Trim whitespace from the query
+  query = query.trim();
+
+  if (!query) {
+    return res.status(400).json({
+      success: false,
+      message: 'Search query cannot be empty.',
+    });
+  }
+
+  const patients = await Patient.find({
+    $or: [
+      { name: { $regex: query, $options: 'i' } },
+      { phone: { $regex: query, $options: 'i' } },
+    ],
+  });
+  res.status(200).json({
+    success: true,
+    data: patients,
   });
 });

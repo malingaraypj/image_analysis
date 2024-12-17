@@ -3,11 +3,16 @@ import AddNew from "../components/addNew";
 import { useLoaderData } from "react-router-dom";
 import PatientCard from "../components/patientCard";
 import Button from "./../UI/Button";
+// import { useContext, useEffect, useState } from "react";
+// import { SearchContext } from "../UI/searchContext";
 
 export default function Landing() {
+  // const [patients,setPatients]=useState([])
+  // const [loadedPatients,setLoadedPatients]=useState([]);
   const data = useLoaderData();
   console.log(data.data.data);
-  const patients = data.data.data || [];
+  const patients = data.data.data;
+  // setLoadedPatients(loadedPatients)
 
   return (
     <>
@@ -26,9 +31,19 @@ export default function Landing() {
 
           {/* Sidebar Navigation Links */}
           <ul className="mt-6 w-full text-center">
+            <li className="py-1 hover:bg-blue-500 cursor-pointer"></li>
             <li className="py-1 hover:bg-blue-500 cursor-pointer">Recents</li>
             <li className="py-1 hover:bg-blue-500 cursor-pointer">Filters</li>
-            <li className="py-2 hover:bg-blue-500 cursor-pointer">Logout</li>
+            <li className="py-2 hover:bg-blue-500 cursor-pointer">
+              <button
+                onClick={() => {
+                  sessionStorage.removeItem("jwtToken");
+                  window.location.href = "/";
+                }}
+              >
+                Logout
+              </button>
+            </li>
           </ul>
         </div>
 
@@ -69,35 +84,25 @@ export async function loader() {
     );
   }
 
-  try {
-    const response = await fetch(apiURL, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+  // try {
+  const response = await fetch(apiURL, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
 
-    if (!response.ok) {
-      const errData = await response.json();
-      console.log(errData);
-      if (response.status === 401) {
-        console.log("unauthorized");
-        throw json(
-          { message: "Please login before using the software." },
-          { status: 401 }
-        );
-      }
+  if (!response.ok) {
+    const errData = await response.json();
+    console.log(errData.message);
 
-      throw json(
-        { message: "Error while fetching data from backend." },
-        { status: response.status }
-      );
-    }
-
-    return response;
-  } catch (error) {
-    console.error("Error:", error);
-    throw json({ message: "Failed to load data." }, { status: 500 });
+    throw json({ message: errData.message }, { status: response.status });
   }
+
+  return response;
+  // } catch (error) {
+  //   console.error("Error:", error);
+  //   throw json({ message: "Failed to load data." }, { status: 500 });
+  // }
 }
