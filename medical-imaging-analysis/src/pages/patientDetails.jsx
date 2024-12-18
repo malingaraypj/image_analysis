@@ -33,6 +33,9 @@ export default function PatientReport() {
               <strong>Phone:</strong> {patient.phone}
             </p>
             <p className="text-gray-600">
+              <strong>Age :</strong> {patient.age}
+            </p>
+            <p className="text-gray-600">
               <strong>Address:</strong> {patient.address}
             </p>
           </div>

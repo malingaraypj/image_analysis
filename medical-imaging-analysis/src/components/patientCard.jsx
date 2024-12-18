@@ -1,5 +1,6 @@
 import React from "react";
 import DummyImg from "./../assets/icons/dummy";
+import { formatDate } from "../UI/utility_functions";
 import { Link } from "react-router-dom";
 
 export default function PatientCard({ patient }) {
@@ -26,7 +27,7 @@ export default function PatientCard({ patient }) {
         </h3>
 
         <p className=" text-gray-600 text-sm mb-1">
-          <strong>DOB:</strong> {patient.dob || "Not provided"}
+          <strong>DOB:</strong> {formatDate(patient.dob) || "Not provided"}
         </p>
         <p className=" text-gray-600 text-sm mb-1">
           <strong>Gender:</strong> {patient.gender || "Not specified"}
@@ -34,6 +35,10 @@ export default function PatientCard({ patient }) {
         <p className=" text-gray-600 text-sm mb-1">
           <strong>Phone:</strong> {patient.phone || "No contact info"}
         </p>
+        <p className=" text-gray-600 text-sm mb-1">
+          <strong>Age :</strong> {patient.age || "Nan"}
+        </p>
+
         {/* View Details Button */}
         <div className="mt-4 flex justify-center">
           <Link

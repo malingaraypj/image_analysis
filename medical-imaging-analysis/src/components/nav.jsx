@@ -2,17 +2,21 @@ import Button from "../UI/Button";
 import { useContext } from "react";
 import ModalContext from "../UI/modalContext";
 import { SearchContext } from "../UI/searchContext";
+import { useNavigate } from "react-router-dom";
 // import Input from "../UI/Input";
 
 export default function Nav() {
   // Accessing modal context
   const modalCtx = useContext(ModalContext);
-  const searchCtx = useContext(SearchContext);
+  // const searchCtx = useContext(SearchContext);
+  // const navigate = useNavigate();
 
   // console.log(searchCtx);
   function handleChange(e) {
     // console.log(e.target.value);
-    searchCtx.updateSearchQuery(e.target.value);
+    // const query=e.target.value;
+    // searchCtx.updateSearchQuery(query);
+    // navigate(`/?query=${encodeURIComponent(query)}`);
   }
 
   // Handle button click
@@ -24,12 +28,12 @@ export default function Nav() {
   return (
     <nav className="flex items-center justify-between bg-blue-300 w-full h-16 px-6 sm:px-12 text-white font-sans fixed top-0 z-50">
       <div className="flex justify-center w-full">
-        <input
+        {/* <input
           type="text"
           placeholder="Search patients"
           onChange={handleChange}
           className="mr-4 p-2 text-black w-2/5"
-        />
+        /> */}
         {/* <Button className="bg-blue-600 p-3 rounded-lg hover:bg-blue-500 hover:border-white">Search</Button> */}
       </div>
       <Button onClick={handleClick} className="bg-blue-600 p-3 rounded-2xl">

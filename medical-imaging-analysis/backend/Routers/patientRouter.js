@@ -46,7 +46,7 @@ Router.route('/')
     patientController.getPatients
   );
 
-Router.route('/searchPatients').get(patientController.searchPatients);
+// Router.route('/searchPatients').get(patientController.searchPatients);
 
 Router.route('/:id').get(patientController.getPatient);
 

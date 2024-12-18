@@ -3,16 +3,14 @@ import AddNew from "../components/addNew";
 import { useLoaderData } from "react-router-dom";
 import PatientCard from "../components/patientCard";
 import Button from "./../UI/Button";
-// import { useContext, useEffect, useState } from "react";
-// import { SearchContext } from "../UI/searchContext";
+import { useContext } from "react";
+import ModalContext from "../UI/modalContext";
 
 export default function Landing() {
-  // const [patients,setPatients]=useState([])
-  // const [loadedPatients,setLoadedPatients]=useState([]);
+  const modalCtx = useContext(ModalContext);
   const data = useLoaderData();
   console.log(data.data.data);
   const patients = data.data.data;
-  // setLoadedPatients(loadedPatients)
 
   return (
     <>
@@ -24,8 +22,14 @@ export default function Landing() {
 
           {/* Signup Button */}
           <div className="mt-4 w-full px-4">
-            <Button className="w-full bg-white text-blue-600 hover:bg-blue-200">
-              Signup
+            <Button
+              className="w-full bg-white text-blue-600 hover:bg-blue-200"
+              onClick={() => {
+                // modalCtx.toggleModalType("login");
+                modalCtx.openModal();
+              }}
+            >
+              Signup/login
             </Button>
           </div>
 
@@ -72,7 +76,7 @@ export default function Landing() {
   );
 }
 
-export async function loader() {
+export async function loader({ request }) {
   const apiURL = "http://localhost:4000/medical_analysis/patients";
 
   const token = sessionStorage.getItem("jwtToken");
@@ -101,8 +105,4 @@ export async function loader() {
   }
 
   return response;
-  // } catch (error) {
-  //   console.error("Error:", error);
-  //   throw json({ message: "Failed to load data." }, { status: 500 });
-  // }
 }

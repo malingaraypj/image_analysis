@@ -51,8 +51,8 @@ exports.login = catchAsync(async (req, res, next) => {
     !user ||
     !(await user.correctPassword(password, user.password))
   ) {
-    console.log(user.password);
-    console.log(password)
+    // console.log(user.password);
+    // console.log(password)
     return next(new AppError('Incorrect email or password', 401));
   }
 
