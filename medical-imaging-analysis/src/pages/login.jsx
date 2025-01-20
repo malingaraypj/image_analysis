@@ -7,6 +7,7 @@ import ModalContext from "../UI/modalContext";
 
 export default function Login() {
   const [errors, setErrors] = useState({});
+  const [backError, setBackError] = useState(null);
   const emailRef = useRef();
   const passwordRef = useRef();
 
@@ -64,6 +65,7 @@ export default function Login() {
       if (!response.ok) {
         const errorData = await response.json();
         console.log(errorData);
+        setBackError(errorData.message);
         throw new Error(errorData.message || "Error while logging in");
       }
 
@@ -73,8 +75,8 @@ export default function Login() {
       window.location.reload();
       modalCtx.closeModal();
     } catch (error) {
-      console.error("Login error:", error.message); 
-      setErrors({ general: error.message }); 
+      console.error("Login error:", error.message);
+      setErrors({ general: error.message });
     }
   }
 
@@ -85,7 +87,7 @@ export default function Login() {
     >
       <h2 className="text-lg font-bold mb-4">Login</h2>
       <div className="flex w-full gap-4"></div>
-      {errors.error && <p className="text-red-500 mb-4">{errors.error}</p>}
+      {backError && <p className="text-red-500 mb-4">{backError}</p>}
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4">
           <Input

@@ -7,6 +7,7 @@ import ModalContext from "../UI/modalContext";
 
 export default function Signup() {
   const [errors, setErrors] = useState({});
+  const [backendError, setBackendErrors] = useState("");
   const [loading, setLoading] = useState(false);
 
   //input refs
@@ -151,8 +152,9 @@ export default function Signup() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setErrors({ backendError: errorData.message });
-        console.log("Backend Error:", errorData.message); // Log for debugging
+        // setErrors({ backendError: errorData.message });
+        setBackendErrors(errorData.message);
+        // console.log("Backend Error:", errorData.message); // Log for debugging
         setLoading(false);
         throw new Error(errorData.message || "Error while submitting data");
       }
@@ -174,8 +176,8 @@ export default function Signup() {
       onClose={modalCtx.closeModal}
     >
       <h2 className="text-lg font-bold mb-4">Sign Up</h2>
-      {errors.backendError && (
-        <p className="text-red-500">{errors.backendError}</p>
+      {backendError && (
+        <p className="text-red-500">{backendError}</p>
       )}
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4">

@@ -1,7 +1,18 @@
-import { Form, redirect } from "react-router-dom";
+import { Form, redirect, useActionData } from "react-router-dom";
 import Input from "../UI/Input";
+import { useState } from "react";
 
 export default function AddPatient() {
+  const actionData = useActionData(); // Get action data, including errors
+  const [errorMessages, setErrorMessages] = useState(
+    actionData?.error ? [actionData.error] : []
+  );
+
+  // Update error messages if actionData changes
+  if (actionData?.error && !errorMessages.includes(actionData.error)) {
+    setErrorMessages([actionData.error]);
+  }
+
   return (
     <>
       <div className="bg-blue-300 min-h-screen flex justify-center items-center">
@@ -9,6 +20,18 @@ export default function AddPatient() {
           <h1 className="text-2xl text-white font-bold mb-6 text-center">
             Add Patient Details
           </h1>
+
+          {/* Display error messages */}
+          {errorMessages.length > 0 && (
+            <div className="mb-4 p-2 border border-red-500 bg-red-100 text-red-700 rounded">
+              <ul>
+                {errorMessages.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <Form method="post" encType="multipart/form-data">
             <Input
               label="Full Name"
@@ -123,15 +146,16 @@ export default function AddPatient() {
 export async function action({ request }) {
   const formData = await request.formData();
 
-  const apiURL = "http://localhost:4000/medical_analysis/patients";
+  const apiURL = "http://127.0.0.1:4000/medical_analysis/patients";
   try {
     const response = await fetch(apiURL, {
       method: "POST",
-      body: formData, 
+      body: formData,
     });
 
     if (!response.ok) {
-      throw new Error("Failed to save patient details");
+      const errorData = await response.json();
+      return { error: errorData.message || "Failed to save patient details" };
     }
 
     return redirect("/");
